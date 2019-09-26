@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="1dp"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    app:cardCornerRadius="50dp"
+    app:cardElevation="0dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:background="@color/transparent"
+         android:id="@+id/pic"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:adjustViewBounds="true"
+         android:hapticFeedbackEnabled="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_bubble_chart_black_24dp" />
+
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorPrimary"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Erro ao encontrar ícone"
+        android:textColor="@color/md_red_300"
+        android:visibility="gone" />
+</androidx.cardview.widget.CardView>
+
