@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +23,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.github.mmin18.widget.RealtimeBlurView;
 import com.ilustris.motiv.R;
 import com.ilustris.motiv.beans.Pics;
 
@@ -40,8 +43,6 @@ public class PicsAdapter extends RecyclerView.Adapter<PicsAdapter.MyViewHolder> 
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater mInflater = LayoutInflater.from(activity);
         View view = mInflater.inflate(R.layout.pics,parent,false);
-
-
         return new MyViewHolder(view);
     }
 
@@ -80,6 +81,20 @@ public class PicsAdapter extends RecyclerView.Adapter<PicsAdapter.MyViewHolder> 
             }
         }).into(holder.pic);
         holder.pic.startAnimation(in);
+        holder.pic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.blur.setVisibility(View.VISIBLE);
+                holder.remove.setVisibility(View.VISIBLE);
+                holder.remove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(activity,"Ícone será removido",Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+
 
 
 
@@ -94,11 +109,15 @@ public class PicsAdapter extends RecyclerView.Adapter<PicsAdapter.MyViewHolder> 
         private ImageView pic;
         private ProgressBar loading;
         private TextView message;
+        private RealtimeBlurView blur;
+        private Button remove;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             pic = itemView.findViewById(R.id.pic);
             loading = itemView.findViewById(R.id.loading);
             message = itemView.findViewById(R.id.error);
+            blur = itemView.findViewById(R.id.defocus);
+            remove = itemView.findViewById(R.id.removebtn);
         }
     }
 }
