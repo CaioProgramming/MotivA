@@ -1,6 +1,10 @@
 package com.ilustris.motiv.db;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.util.Log;
 
@@ -28,11 +32,14 @@ import com.ilustris.motiv.adapters.PicsAdapter;
 import com.ilustris.motiv.beans.Pics;
 import com.ilustris.motiv.tools.Alert;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Picsdb extends Quotesdb {
     private Activity activity;
@@ -102,55 +109,55 @@ public class Picsdb extends Quotesdb {
 
     }
 
-    public void AddIcon(final String name, Uri path){
-        try {
-            InputStream stream = new FileInputStream(new File(path.getPath()));
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            // Create a storage reference from our app
-            StorageReference storageRef = storage.getReference();
-            // Create a reference to 'images/mountains.jpg'
-            final StorageReference iconimageref = storageRef.child(String.format("icons/%s.png", name));
+    public void AddIcon(final String name, CircleImageView imageView, final Dialog dialog){
+        // Get the data from an ImageView as bytes
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReference();
+        // Create a reference to 'images/mountains.jpg'
+        final StorageReference iconimageref = storageRef.child(String.format("icons/%s.png", name));
+        final Alert alert = new Alert(activity);
+
+        final UploadTask uploadTask = iconimageref.putBytes(data);
 
 
-            final UploadTask uploadTask = iconimageref.putStream(stream);
 
-            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
-                    }
-
-                    // Continue with the task to get the download URL
-                    return iconimageref.getDownloadUrl();
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
                 }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        Pics pics = new Pics();
-                        pics.setName(name);
-                        pics.setUri(String.valueOf(task.getResult()));
-                        DatabaseReference iconsref = FirebaseDatabase.getInstance().getReference("images");
-                        iconsref.push().setValue(pics);
-                    } else {
-                        Alert alert = new Alert(activity);
-                        alert.MessageAlert(activity.getDrawable(R.drawable.ic_cancel),"Erro ao retornar url de download "+
-                                task.getException().getMessage());
 
-                    }
+                // Continue with the task to get the download URL
+                return iconimageref.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    dialog.dismiss();
+                    Pics pics = new Pics();
+                    pics.setName(name);
+                    pics.setUri(String.valueOf(task.getResult()));
+                    DatabaseReference iconsref = FirebaseDatabase.getInstance().getReference("images");
+                    iconsref.push().setValue(pics);
+                    alert.MessageAlert(activity.getDrawable(R.drawable.ic_success),"Ícone adicionado com sucesso!");
+                } else {
+                    alert.MessageAlert(activity.getDrawable(R.drawable.ic_cancel),"Erro ao retornar url de download "+
+                            task.getException().getMessage());
+
                 }
-            });
+            }
+        });
 
 
-
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(activity);
-            alert.MessageAlert(activity.getDrawable(R.drawable.ic_cancel),"Erro ao encontrar imagem.");
-        }
 
 
 

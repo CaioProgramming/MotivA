@@ -1,9 +1,12 @@
 package com.ilustris.motiv;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,12 +19,13 @@ import com.ilustris.motiv.adapters.HomePager;
 import com.ilustris.motiv.tools.Alert;
 import com.ilustris.motiv.tools.Utils;
 
-import static com.ilustris.motiv.tools.Utils.REQUEST_WRITE_PERMISSION;
+
+
+import static com.ilustris.motiv.tools.Utils.REQUEST_READ_PERMISSION;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarLayout appbar;
-    private Toolbar toolbar;
+     private Toolbar toolbar;
     private TabLayout tabs;
     private ViewPager pager;
 
@@ -33,18 +37,25 @@ public class MainActivity extends AppCompatActivity {
         Alert alert = new Alert(this);
         alert.login();
        requestPermission();
+
+
+
+
+
     }
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_WRITE_PERMISSION);
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_READ_PERMISSION);
         }
     }
+
+
     private void initView() {
 
-        appbar = findViewById(R.id.appbar);
-        toolbar = findViewById(R.id.toolbar);
+         toolbar = findViewById(R.id.toolbar);
         tabs = findViewById(R.id.tabs);
         pager = findViewById(R.id.pager);
+        setSupportActionBar(toolbar);
         HomePager homepager = new HomePager(getSupportFragmentManager());
         pager.setAdapter(homepager);
         tabs.setupWithViewPager(pager);
@@ -57,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == Utils.PICK_IMAGE){
             if (resultCode == RESULT_OK){
                 Alert alert = new Alert(this);
-                alert.AddIcon(data.getData());
+                alert.AddIcon(data.getData(),true);
             }else{
                 Alert alert = new Alert(this);
                 alert.MessageAlert(getDrawable(R.drawable.ic_cancel),"Erro ao retornar imagem");
@@ -73,4 +84,8 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
+
+
 }

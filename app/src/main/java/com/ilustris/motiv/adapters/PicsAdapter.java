@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -92,6 +93,7 @@ public class PicsAdapter extends RecyclerView.Adapter<PicsAdapter.MyViewHolder> 
              }
         });
 
+
     }
 
     @Override
@@ -103,9 +105,11 @@ public class PicsAdapter extends RecyclerView.Adapter<PicsAdapter.MyViewHolder> 
         private ImageView pic;
         private ProgressBar loading;
          private RealtimeBlurView blur;
+         private CardView card;
         private Button remove;
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
+            card = itemView.findViewById(R.id.card);
             pic = itemView.findViewById(R.id.pic);
             loading = itemView.findViewById(R.id.loading);
             blur = itemView.findViewById(R.id.defocus);
@@ -115,6 +119,9 @@ public class PicsAdapter extends RecyclerView.Adapter<PicsAdapter.MyViewHolder> 
                 public void onClick(View view) {
                     blur.setVisibility(View.VISIBLE);
                     remove.setVisibility(View.VISIBLE);
+                    Animation pulse = AnimationUtils.loadAnimation(activity, R.anim.pulse);
+                    card.startAnimation(pulse);
+
                 }
             });
         }

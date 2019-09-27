@@ -3,6 +3,7 @@ package com.ilustris.motiv.tools;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.View;
@@ -13,10 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.github.mmin18.widget.RealtimeBlurView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.ilustris.motiv.MainActivity;
 import com.ilustris.motiv.R;
 import com.ilustris.motiv.beans.Pics;
 import com.ilustris.motiv.beans.Quotes;
@@ -33,12 +36,20 @@ public class Alert implements Dialog.OnShowListener, Dialog.OnDismissListener {
     private Activity activity;
     RealtimeBlurView blur;
 
+
+
+    private DialogInterface.OnDismissListener onDismissListener;
+
+
     public Alert(Activity activity) {
         this.activity = activity;
         this.blur= activity.findViewById(R.id.rootblur);
         login();
 
     }
+
+
+
 
     public void MessageAlert(Drawable icondraw,String message){
         final Dialog dialog = new Dialog(activity,R.style.Dialog_No_Border);
@@ -62,23 +73,32 @@ public class Alert implements Dialog.OnShowListener, Dialog.OnDismissListener {
 
     }
 
-    public void AddIcon(final Uri uri){
-        Dialog dialog= new Dialog(activity,R.style.Dialog_No_Border);
+    public void AddIcon(final Uri uri,boolean ismainact){
+        final Dialog dialog= new Dialog(activity,R.style.Dialog_No_Border);
         dialog.setContentView(R.layout.addicon_layout);
         dialog.setOnShowListener(this);
         dialog.setOnDismissListener(this);
-        CircleImageView imageView = dialog.findViewById(R.id.pic);
+        final CircleImageView imageView = dialog.findViewById(R.id.pic);
         final EditText iconanme = dialog.findViewById(R.id.iconame);
-        Button save = dialog.findViewById(R.id.save);
-        imageView.setImageURI(uri);
+        final Button save = dialog.findViewById(R.id.save);
+        Glide.with(activity).load(uri).into(imageView);
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Picsdb picsdb = new Picsdb(activity);
-                picsdb.AddIcon(iconanme.getText().toString(),uri);
+                picsdb.AddIcon(iconanme.getText().toString(),imageView,dialog);
+                save.setEnabled(false);
             }
         });
         dialog.show();
+        if (!ismainact) {
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    activity.finish();
+                }
+            });
+        }
     }
 
     public void login(){
@@ -100,16 +120,20 @@ public class Alert implements Dialog.OnShowListener, Dialog.OnDismissListener {
 
     @Override
     public void onShow(DialogInterface dialogInterface) {
-        Animation in = AnimationUtils.loadAnimation(activity, R.anim.fade_in);
-        blur.setVisibility(View.VISIBLE);
-        blur.startAnimation(in);
+        if (blur != null) {
+            Animation in = AnimationUtils.loadAnimation(activity, R.anim.fade_in);
+            blur.setVisibility(View.VISIBLE);
+            blur.startAnimation(in);
+        }
 
     }
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
-        Animation out = AnimationUtils.loadAnimation(activity, R.anim.fade_out);
-        blur.startAnimation(out);
-        blur.setVisibility(View.GONE);
+        if (blur != null) {
+            Animation out = AnimationUtils.loadAnimation(activity, R.anim.fade_out);
+            blur.startAnimation(out);
+            blur.setVisibility(View.GONE);
+        }
     }
 }

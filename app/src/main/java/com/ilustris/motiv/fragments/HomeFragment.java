@@ -41,11 +41,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void initView(View v) {
-        appbar = (AppBarLayout) v.findViewById(R.id.appbar);
-        reportcount = (TextView) v.findViewById(R.id.reportcount);
-        recyclerview = (RecyclerView) v.findViewById(R.id.recyclerview);
+        TextView empty = v.findViewById(R.id.empty);
+        appbar = v.findViewById(R.id.appbar);
+        reportcount = v.findViewById(R.id.reportcount);
+        recyclerview = v.findViewById(R.id.recyclerview);
         Quotesdb quotesdb = new Quotesdb(getActivity());
         quotesdb.Carregar(recyclerview);
+        if (recyclerview.getChildCount() == 0){
+            empty.setVisibility(View.VISIBLE);
+        }
 
     }
 }

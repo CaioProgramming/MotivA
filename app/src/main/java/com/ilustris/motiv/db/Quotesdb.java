@@ -52,6 +52,7 @@ public class Quotesdb {
                             quotesArrayList.add(quotes);
                         }
                     }
+
                     QuotesAdapter quotesAdapter = new QuotesAdapter(quotesArrayList, activity);
                     GridLayoutManager llm = new GridLayoutManager(activity, 1, LinearLayoutManager.VERTICAL, false);
                     recyclerView.setAdapter(quotesAdapter);

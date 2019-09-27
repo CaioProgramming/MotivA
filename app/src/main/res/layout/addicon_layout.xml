@@ -16,6 +16,7 @@
         android:layout_height="250dp" />
 
     <EditText
+        android:textAlignment="center"
         android:id="@+id/iconame"
         android:padding="10dp"
         android:textSize="28sp"
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content" />
 
     <Button
+        android:foreground="?attr/selectableItemBackground"
         android:id="@+id/save"
         android:drawableTop="@drawable/ic_file_upload_black_24dp"
         android:text="Adicionar"
