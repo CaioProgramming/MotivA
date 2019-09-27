@@ -26,6 +26,7 @@ import com.bumptech.glide.request.target.Target;
 import com.github.mmin18.widget.RealtimeBlurView;
 import com.ilustris.motiv.R;
 import com.ilustris.motiv.beans.Pics;
+import com.ilustris.motiv.db.Picsdb;
 
 import java.util.ArrayList;
 
@@ -81,22 +82,15 @@ public class PicsAdapter extends RecyclerView.Adapter<PicsAdapter.MyViewHolder> 
             }
         }).into(holder.pic);
         holder.pic.startAnimation(in);
-        holder.pic.setOnClickListener(new View.OnClickListener() {
+        holder.blur.setVisibility(View.GONE);
+        holder.remove.setVisibility(View.GONE);
+        holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.blur.setVisibility(View.VISIBLE);
-                holder.remove.setVisibility(View.VISIBLE);
-                holder.remove.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(activity,"Ícone será removido",Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
+                Picsdb picsdb = new Picsdb(activity);
+                picsdb.Remover(pic);
+             }
         });
-
-
-
 
     }
 
@@ -105,19 +99,24 @@ public class PicsAdapter extends RecyclerView.Adapter<PicsAdapter.MyViewHolder> 
         return picsArrayList.size();
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder {
         private ImageView pic;
         private ProgressBar loading;
-        private TextView message;
-        private RealtimeBlurView blur;
+         private RealtimeBlurView blur;
         private Button remove;
-        public MyViewHolder(@NonNull View itemView) {
+        MyViewHolder(@NonNull View itemView) {
             super(itemView);
             pic = itemView.findViewById(R.id.pic);
             loading = itemView.findViewById(R.id.loading);
-            message = itemView.findViewById(R.id.error);
             blur = itemView.findViewById(R.id.defocus);
             remove = itemView.findViewById(R.id.removebtn);
+            pic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    blur.setVisibility(View.VISIBLE);
+                    remove.setVisibility(View.VISIBLE);
+                }
+            });
         }
     }
 }

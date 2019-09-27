@@ -29,6 +29,7 @@
     </style>
 
     <style name="Dialog_No_Border">
+        <item name="android:backgroundDimAmount">0</item>
         <item name="android:windowAnimationStyle">@style/AppTheme.Animation</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowBackground">@color/transparent</item>
@@ -37,6 +38,6 @@
 
     <style name="AppTheme.Animation">
         <item name="android:windowEnterAnimation">@anim/pop_in</item>
-        <item name="android:windowExitAnimation">@anim/fade_out</item>
+        <item name="android:windowExitAnimation">@anim/pop_out</item>
     </style>
 </resources>

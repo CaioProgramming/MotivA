@@ -1,10 +1,12 @@
 package com.ilustris.motiv.fragments;
 
 
+import android.media.Image;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -46,12 +48,17 @@ public class PicsFragment extends Fragment {
     private void initView(View v) {
         appbar = v.findViewById(R.id.appbar);
         addicon = v.findViewById(R.id.addpicard);
+        ImageView pic = v.findViewById(R.id.pic);
         recyclerview = v.findViewById(R.id.recyclerview);
-        if (getActivity() != null) {
-            Picsdb picsdb = new Picsdb(getActivity());
-            picsdb.Carregar(recyclerview);
-        }
+        Picsdb picsdb = new Picsdb(getActivity());
+        picsdb.Carregar(recyclerview);
         addicon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Utils.pickimage(getActivity());
+            }
+        });
+        pic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Utils.pickimage(getActivity());

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/md_grey_800"
     xmlns:app="http://schemas.android.com/apk/res-auto"
      android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,7 +10,7 @@
 
         android:id="@+id/appbar"
         app:elevation="1dp"
-        android:background="@color/md_grey_900"
+        android:background="@color/md_grey_800"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
          <com.google.android.material.appbar.CollapsingToolbarLayout

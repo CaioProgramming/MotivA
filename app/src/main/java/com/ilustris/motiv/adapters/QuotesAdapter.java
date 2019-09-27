@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.ilustris.motiv.R;
 import com.ilustris.motiv.beans.Quotes;
+import com.ilustris.motiv.db.Quotesdb;
 
 import java.util.ArrayList;
 
@@ -44,7 +45,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Quotes quote = quotesArrayList.get(holder.getAdapterPosition());
+        final Quotes quote = quotesArrayList.get(holder.getAdapterPosition());
         holder.author.setText(quote.getAuthor());
         holder.quote.setText(quote.getQuote());
         holder.author.setTextColor(quote.getTextcolor());
@@ -59,6 +60,23 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
             holder.quote.setTextColor(Color.BLACK);
             holder.author.setTextColor(Color.BLACK);
         }
+
+
+        holder.delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Quotesdb quotesdb = new Quotesdb(activity);
+                quotesdb.Delete(quote);
+            }
+        });
+        holder.restore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                quote.setReport(false);
+                Quotesdb quotesdb = new Quotesdb(activity);
+                quotesdb.Restore(quote);
+            }
+        });
     }
 
     @Override
@@ -75,6 +93,7 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
         CardView background;
         TextView quote;
         TextView author;
+        TextView restore,delete;
 
 
         public MyViewHolder(@NonNull View convertView) {
@@ -87,6 +106,8 @@ public class QuotesAdapter extends RecyclerView.Adapter<QuotesAdapter.MyViewHold
             background = convertView.findViewById(R.id.background);
             quote = convertView.findViewById(R.id.quote);
             author = convertView.findViewById(R.id.author);
+            restore = convertView.findViewById(R.id.rightview);
+            delete = convertView.findViewById(R.id.leftview);
         }
     }
 }
